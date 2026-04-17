@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPTV节目编辑器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(to right, #4A6FA5, #6A93CB);
+            color: white;
+            padding: 25px 30px;
+            border-bottom: 1px solid #e0e6ef;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .header h1 i {
+            margin-right: 12px;
+            font-size: 32px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 15px;
+        }
+
+        .main-content {
+            padding: 30px;
+        }
+
+        .info-card {
+            background: linear-gradient(to right, #f8f9ff, #eef2ff);
+            border-left: 4px solid #4A6FA5;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .info-text {
+            flex-grow: 1;
+        }
+
+        .info-text h3 {
+            color: #4A6FA5;
+            font-size: 18px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .time-display {
+            background-color: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+            min-width: 240px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .time-icon {
+            color: #4A6FA5;
+            margin-right: 8px;
+        }
+
+        .editor-container {
+            margin-bottom: 30px;
+        }
+
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .editor-header h3 {
+            color: #4A6FA5;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .file-info {
+            color: #666;
+            font-size: 14px;
+            background-color: #f8f9fa;
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .editor {
+            width: 100%;
+            height: 450px;
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: vertical;
+            transition: border-color 0.3s;
+            background-color: #fcfdff;
+        }
+
+        .editor:focus {
+            outline: none;
+            border-color: #4A6FA5;
+            box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.1);
+        }
+
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #4A6FA5, #5a7cb5);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(to right, #3e5c8a, #4A6FA5);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 111, 165, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background-color: #f1f5f9;
+            color: #64748b;
+            border: 1px solid #cbd5e1;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e2e8f0;
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #94a3b8;
+            font-size: 14px;
+            border-top: 1px solid #e2e8f0;
+            background-color: #f8fafc;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background-color: #10b981;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background-color: #ef4444;
+        }
+
+        .notification i {
+            margin-right: 10px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4A6FA5;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 12px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .info-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .time-display {
+                margin-top: 15px;
+                width: 100%;
+            }
+
+            .editor {
+                height: 350px;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        /* 为文件切换区域添加悬停和点击效果 */
+        .file-info {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+            /* 防止文字被选中 */
+        }
+
+        .file-info:hover {
+            background-color: #e2e8f0;
+            border-color: #94a3b8;
+        }
+
+        .file-info:active {
+            transform: scale(0.98);
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-tv"></i> IPTV节目列表编辑器</h1>
+            <p>编辑和管理您的IPTV节目列表，所有更改将自动保存到服务器</p>
+        </div>
+
+        <div class="main-content">
+            <div class="info-card">
+                <div class="info-text">
+                    <h3>上次修改时间</h3>
+                    <p>显示您最后一次保存文件的时间，方便追踪更新记录</p>
+                </div>
+                <div class="time-display">
+                    <i class="fas fa-clock time-icon"></i>
+                    <span id="lastModified">加载中...</span>
+                </div>
+            </div>
+
+            <div class="editor-container">
+                <div class="editor-header">
+                    <h3><i class="fas fa-edit"></i> 节目列表编辑</h3>
+                    <div class="file-info" id="fileSwitch" onclick="switchFile()">
+                        <i class="fas fa-file-alt"></i>
+                        当前文件: <span id="currentFileName">iptv.txt</span>
+                        <i class="fas fa-exchange-alt" style="margin-left: 8px; font-size: 0.9em;"></i>
+                    </div>
+                </div>
+                <textarea id="editor" class="editor" placeholder="在此编辑您的IPTV节目列表（txt格式）..."></textarea>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-secondary" onclick="loadContent()">
+                    <i class="fas fa-redo"></i> 重新加载
+                </button>
+                <button class="btn btn-primary" onclick="saveFile()">
+                    <i class="fas fa-save"></i> 保存更改
+                </button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>
+                <i class="fas fa-laptop-code"></i> IPTV节目编辑器 | 
+                <i class="fab fa-linux"></i> 运行于OpenWRT系统 | 
+                <a href="https://github.com/wangweiwei104/IPTVEditor" 
+                target="_blank" 
+                style="color: #94a3b8; text-decoration: none; transition: color 0.2s;"
+                onmouseover="this.style.color='#4A6FA5'"
+                onmouseout="this.style.color='#94a3b8'">
+                <i class="fab fa-github"></i> 查看项目仓库
+                </a>
+            </p>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>正在加载，请稍候...</p>
+        </div>
+
+        <div class="notification" id="notification">
+            <i class="fas fa-check-circle"></i>
+            <span id="notificationText">操作成功！</span>
+        </div>
+
+        <script>
+            // ========== 新增：全局状态变量 ==========
+            let currentFile = 'iptv.txt'; // 当前编辑的文件名
+            const supportedFiles = ['iptv.txt', 'iptv.m3u8']; // 支持的文件列表
+
+            // 自动加载文件
+            window.addEventListener('DOMContentLoaded', async () => {
+                showLoading(true);
+                try {
+                    // 同时加载IPTV文件内容和上次修改时间
+                    await Promise.all([
+                        loadIPTVContent(),
+                        loadLastModifiedTime()
+                    ]);
+                } catch (error) {
+                    console.log('文件初始化失败:', error);
+                    document.getElementById('lastModified').textContent = '加载失败';
+                    showNotification('文件加载失败，请检查网络连接', 'error');
+                } finally {
+                    showLoading(false);
+                }
+            });
+
+            // 显示/隐藏加载动画
+            function showLoading(show) {
+                document.getElementById('loading').style.display = show ? 'block' : 'none';
+            }
+
+            // 显示通知
+            function showNotification(message, type = 'success') {
+                const notification = document.getElementById('notification');
+                const notificationText = document.getElementById('notificationText');
+
+                notificationText.textContent = message;
+
+                if (type === 'error') {
+                    notification.classList.add('error');
+                } else {
+                    notification.classList.remove('error');
+                }
+
+                notification.classList.add('show');
+
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+            // ========== 新增：文件切换函数 ==========
+            function switchFile() {
+                // 计算下一个文件的索引
+                const currentIndex = supportedFiles.indexOf(currentFile);
+                const nextIndex = (currentIndex + 1) % supportedFiles.length;
+                const nextFile = supportedFiles[nextIndex];
+
+                // 更新当前文件状态
+                currentFile = nextFile;
+                // 更新界面显示
+                const editor = document.getElementById('editor');
+                if (currentFile === 'iptv.m3u8') {
+                    editor.placeholder = '在此编辑您的IPTV节目列表（m3u格式）...';
+                } else {
+                    // 默认为txt格式提示，或明确处理iptv.txt
+                    editor.placeholder = '在此编辑您的IPTV节目列表（txt格式）...';
+                }
+                document.getElementById('currentFileName').textContent = currentFile;
+                // 显示切换提示
+                showNotification(`已切换到文件: ${currentFile}`);
+                // 自动重新加载新文件的内容和修改时间
+                loadContent();
+            }
+
+            // ========== 修改：加载IPTV内容函数 ==========
+            async function loadIPTVContent() {
+                try {
+                    // 修改：根据 currentFile 动态请求对应文件
+                    const response = await fetch(currentFile + '?_=' + Date.now());
+                    if (!response.ok) throw new Error('网络响应错误');
+                    document.getElementById('editor').value = await response.text();
+                } catch (error) {
+                    console.log(`加载文件 ${currentFile} 失败:`, error);
+                    // 如果文件不存在，清空编辑器
+                    document.getElementById('editor').value = `# 文件 ${currentFile} 加载失败或不存在\n# 请在此编辑并保存以创建新文件。`;
+                    throw error;
+                }
+            }
+
+            // ========== 修改：加载上次修改时间函数 ==========
+            async function loadLastModifiedTime() {
+                try {
+                    // 修改：根据 currentFile 获取对应的时间记录文件
+                    // 假设时间记录文件命名为 `last_modified_[文件名].txt`
+                    const timeFile = `last_modified_${currentFile}.txt`;
+                    const response = await fetch(timeFile + '?_=' + Date.now());
+
+                    if (response.ok) {
+                        const timeText = await response.text();
+                        if (timeText.trim()) {
+                            document.getElementById('lastModified').textContent = timeText;
+                        } else {
+                            document.getElementById('lastModified').textContent = '从未修改';
+                        }
+                    } else {
+                        document.getElementById('lastModified').textContent = '从未修改';
+                    }
+                } catch (error) {
+                    console.log('加载修改时间失败:', error);
+                    document.getElementById('lastModified').textContent = '时间加载失败';
+                    throw error;
+                }
+            }
+
+            // 重新加载内容
+            async function loadContent() {
+                showLoading(true);
+                try {
+                    await loadIPTVContent();
+                    await loadLastModifiedTime();
+                    showNotification('内容已重新加载');
+                } catch (error) {
+                    showNotification('重新加载失败', 'error');
+                } finally {
+                    showLoading(false);
+                }
+            }
+
+
+            async function saveFile() {
+                const content = document.getElementById('editor').value;
+
+                if (!content.trim()) {
+                    showNotification('内容不能为空', 'error');
+                    return;
+                }
+
+                showLoading(true);
+
+                try {
+                    // 修改点1: 将数据包装成一个简单的纯文本结构
+                    // 包含文件名和内容，用易于解析的分隔符隔开
+
+                    const response = await fetch(`cgi-bin/save.cgi?filename=${encodeURIComponent(currentFile)}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain' },
+                        body: content
+                    });
+
+                    const result = await response.text();
+                    if (result.trim() === 'success') {
+                        showNotification(`文件 ${currentFile} 保存成功！`);
+                        await loadLastModifiedTime();
+                    } else {
+                        throw new Error('保存失败: ' + result);
+                    }
+                } catch (error) {
+                    console.error('保存错误:', error);
+                    showNotification('保存失败: ' + error.message, 'error');
+                } finally {
+                    showLoading(false);
+                }
+            }
+
+            // 添加编辑器键盘快捷键
+            document.getElementById('editor').addEventListener('keydown', function (e) {
+                // Ctrl/Cmd + S 保存
+                if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                    e.preventDefault();
+                    saveFile();
+                }
+            });
+        </script>
+</body>
+
+</html>

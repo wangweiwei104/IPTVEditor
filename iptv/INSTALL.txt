@@ -1,0 +1,27 @@
+OpenWrt配置步骤
+1) 放置文件并设置文件权限
+建议在非系统分区放置iptv文件夹，在建立软连接至/www
+ln -s /data/iptv /www/
+确保/www下有个iptv
+
+# 创建目录
+mkdir -p /www/iptv/cgi-bin
+
+# 设置权限
+chmod 755 /www/iptv
+chmod 755 /www/iptv/cgi-bin
+chmod 755 /www/iptv/cgi-bin/save.cgi
+chmod 644 /www/iptv/iptv.txt
+chmod 644 /www/iptv/iptv.m3u8
+
+
+2) 修改uHTTPd配置 (/etc/config/uhttpd)
+
+config uhttpd main
+    # 添加以下配置
+    list interpreter ".cgi=/bin/sh"
+
+
+3) 重启服务
+
+/etc/init.d/uhttpd restart
