@@ -380,7 +380,7 @@
         <script>
             // ========== 新增：全局状态变量 ==========
             let currentFile = 'iptv.txt'; // 当前编辑的文件名
-            const supportedFiles = ['iptv.txt', 'iptv.m3u8']; // 支持的文件列表
+            const supportedFiles = ['iptv.txt', 'iptv.m3u']; // 支持的文件列表
 
             // 自动加载文件
             window.addEventListener('DOMContentLoaded', async () => {
@@ -435,7 +435,7 @@
                 currentFile = nextFile;
                 // 更新界面显示
                 const editor = document.getElementById('editor');
-                if (currentFile === 'iptv.m3u8') {
+                if (currentFile === 'iptv.m3u') {
                     editor.placeholder = '在此编辑您的IPTV节目列表（m3u格式）...';
                 } else {
                     // 默认为txt格式提示，或明确处理iptv.txt
