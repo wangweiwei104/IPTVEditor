@@ -1,0 +1,85 @@
+# 操作系统生成的文件
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# 编辑器/IDE文件
+# VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+
+# 语言/框架相关
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+# Java
+*.class
+*.jar
+*.war
+*.ear
+# Go
+bin/
+pkg/
+# Rust
+/target/
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.docstates
+
+# 构建输出
+dist/
+build/
+out/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# 日志文件
+*.log
+logs/
+
+# 环境变量文件
+.env
+.env.local
+.env.*.local
+
+# 依赖目录 (如 vendor, packages)
+vendor/
+packages/
+
+# 临时文件
+*.tmp
+*.temp
+
