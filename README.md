@@ -62,9 +62,17 @@ chmod 644 /www/iptv/iptv.m3u8
 
 ```bash
 config uhttpd main
-    # 添加以下配置
+    # 用于调用本机的shell保存文件
     list interpreter ".cgi=/bin/sh"
-    # 关键配置：强制所有文本文件使用UTF-8编码 为了能访问/logo/山东卫视.png(汉字的频道)
+    # 强制所有文本文件使用UTF-8编码，用于识别链接中的中文，如http://192.168.x.x/iptv/logo/山东卫视.png
+    option index_options  'Charset=UTF-8'
+```
+
+无注释版
+
+```bash
+config uhttpd main
+    list interpreter ".cgi=/bin/sh"
     option index_options  'Charset=UTF-8'
 ```
 
