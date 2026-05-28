@@ -68,6 +68,10 @@ config uhttpd main
     option index_options  'Charset=UTF-8'
 ```
 
+>[!TIP]
+> logo/下的中文频道的文件可能会因为是GBK编码而无法访问，提示如：The requested URL /iptv/logo/%E5%B1%B1%E8%A5%BF%E5%8D%AB%E8%A7%86.png was not found on this server.
+> 在macos win11 下直接下载这个目录中的文件是测试通过的，可能使用win10就是gbk编码，还未测试
+
 无注释版
 
 ```bash
