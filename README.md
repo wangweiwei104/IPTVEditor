@@ -69,8 +69,11 @@ config uhttpd main
 ```
 
 >[!TIP]
-> logo/下的中文频道的文件可能会因为是GBK编码而无法访问，提示如：The requested URL /iptv/logo/%E5%B1%B1%E8%A5%BF%E5%8D%AB%E8%A7%86.png was not found on this server.
-> 在macos win11 下直接下载这个目录中的文件是测试通过的，可能使用win10就是gbk编码，还未测试
+> 使用MobaXterm在win下上传文件到logo/下时，中文频道的文件可能会因为是GBK编码而无法访问，提示如：The requested URL /iptv/logo/%E5%B1%B1%E8%A5%BF%E5%8D%AB%E8%A7%86.png was not found on this server.
+> 建议将[text](iptv.tar.gz)这个压缩包上传到/data/，得到/data/iptv，解压命令为
+> ```bash
+> tar -xzvf iptv.tar.gz
+> ```
 
 无注释版
 
